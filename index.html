@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <ul>
+        <li><a href="testepdf.pdf" download="arquivo.pdf" target="_blank" type="application/pdf">Baixar pdf:</a></li>
+        <li><a href="inkscape-0.92.3-x64.exe" download="arquivo.exe">Baixar .exe</li>
+        <li><a href="lightbox2.rar" download="arquivo.rar">Baixar .rar</a></li>
+        <li><a href="#" onclick="fazerDW()">Baixar .txt</a></li>
+    </ul>
+
+    <div style="display: none;">
+        <label for="arquivo">Prepara Download: </label>
+        <input type="file" id="arquivo" onChange="handleFile(this.files)">
+        <textarea type="text" id="texto" rows="7" cols="90"></textarea>
+    </div>
+
+    <button id="btn" onclick="baixar()" disabled>Baixar</button>
+    <script>
+        function fazerDW() {
+            document.querySelector("#arquivo").click();
+        }
+
+        function handleFile(files) {
+            console.log(files);
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                let data = event.target.result;
+                document.querySelector("#texto").value = data;
+            };
+            reader.readAsText(files[0]);
+            document.querySelector("#btn").removeAttribute('disabled', '');
+        }
+
+        function baixar(type) {
+            let mtType = '', ext = '';
+            let blob = new Blob();
+            ext = 'txt'
+            if (document.querySelector("#arquivo").value.includes('txt')) {
+                mtType = 'text/plain;charset=utf-8;';
+            } else if (document.querySelector("#arquivo").value.includes('js')) {
+                mtType = 'text/javascript';
+                ext = 'js';
+            } else if (document.querySelector("#arquivo").value.includes('css')) {
+                mtType = 'text/css';
+                ext = 'css';
+            } else if (document.querySelector("#arquivo").value.includes('pdf')) {
+                mtType = 'application/octet-stream';
+                ext = 'pdf';
+            }
+
+            if (document.querySelector("#texto").value !== null) {
+                    blob = new Blob([document.querySelector("#texto").value], { type: mtType });
+                    const link = window.document.createElement('a');
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = 'arquivo.' + ext;
+                    link.click();
+                    window.URL.revokeObjectURL(link.href);
+            }
+        }
+    </script>
+</body>
+
+</html>
