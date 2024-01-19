@@ -8,8 +8,9 @@
 </head>
 
 <body>
+    <a id="dwnldLnk" download="arquivo.pdf" style="display: none;"></a>
     <ul>
-        <li><a href="testepdf.pdf" download="arquivo.pdf" target="_blank" type="application/pdf">Baixar pdf:</a></li>
+        <li><a href="#" onclick="fazerDW('pdf')">Baixar pdf:</a></li>
         <li><a href="inkscape-0.92.3-x64.exe" download="arquivo.exe">Baixar .exe</li>
         <li><a href="lightbox2.rar" download="arquivo.rar">Baixar .rar</a></li>
         <li><a href="#" onclick="fazerDW()">Baixar .txt</a></li>
@@ -22,9 +23,18 @@
     </div>
 
     <button id="btn" onclick="baixar()" disabled>Baixar</button>
+
+    <input type="datetime-local">
     <script>
-        function fazerDW() {
-            document.querySelector("#arquivo").click();
+        var dado = "Hello";
+        function fazerDW(tipo) {
+            if (tipo === 'pdf') {
+                let dlnk = document.getElementById('dwnldLnk');
+                dlnk.href = "data:application/octet-stream;base64," + dado;
+                dlnk.click();
+            } else {
+                document.querySelector("#arquivo").click();
+            }
         }
 
         function handleFile(files) {
@@ -56,12 +66,12 @@
             }
 
             if (document.querySelector("#texto").value !== null) {
-                    blob = new Blob([document.querySelector("#texto").value], { type: mtType });
-                    const link = window.document.createElement('a');
-                    link.href = window.URL.createObjectURL(blob);
-                    link.download = 'arquivo.' + ext;
-                    link.click();
-                    window.URL.revokeObjectURL(link.href);
+                blob = new Blob([document.querySelector("#texto").value], { type: mtType });
+                const link = window.document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                link.download = 'arquivo.' + ext;
+                link.click();
+                window.URL.revokeObjectURL(link.href);
             }
         }
     </script>
